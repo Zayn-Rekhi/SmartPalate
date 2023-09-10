@@ -88,9 +88,9 @@ import {
     
               <List style={{ marginLeft: "-10px" }}>
     
-                {/* { ingredients.map((e) => 
+              {/* { ingredients.map((e) => 
                   <ListItem>{e}</ListItem>
-                )} */}
+                )}  */}
               
               </List>
             </Container>

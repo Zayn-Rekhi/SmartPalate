@@ -8,7 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 
-export default function CheckboxList(props) {
+export default function Instructions(props) {
   const [checked, setChecked] = React.useState([0]);
 
   const handleToggle = (value: number) => () => {

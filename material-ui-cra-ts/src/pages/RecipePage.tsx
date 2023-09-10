@@ -52,7 +52,7 @@ export default function RecipePage() {
         <br />
 
         <Stack>
-          <Slide cascade>
+          <Slide>
             {items.map((item, i) => (
               <>
                 <RecpCard

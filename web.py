@@ -20,6 +20,7 @@ names = None
 images_dict = None
 meal_data = None
 nutritions_dict = None
+reviews = None
 
 @app.route('/test')
 def testRet():
@@ -32,37 +33,41 @@ def process_recommendations():
     img = Image.open(BytesIO(base64.b64decode(image_data))).convert('RGB')
     ingredients = run_model(img)[0]
 
-    other_ingredients = ["spinach", "tomatoes", "hamburger buns", "ground beef", "cheese", "mustard"]
+    other_ingredients = ["spinach", "tomatoes", "hamburger buns", "ground beef", "cheese", "mustard",
+                         "pasta" ,"egg","pork","butter","garlic"
+                         ,"bread","cream","breadcrumbs","spaghetti sauce",
+                         "parsley","vinegar","shrimp","chicken"]
     ingredients_str, ingredients_arr = cnn_parse(cnn_input = ingredients, other_ingredients_to_include=other_ingredients)
-    # print(ingredients_str)
+    #print(ingredients_str)
+    #  print(ingredients_str)
     global ids
     global names
     global ingredients_dict
     global images_dict
     global nutritions_dict
-    names, ids, ingredients_dict, images_dict, nutritions_dict = get_meals(ingredients_str, ingredients_arr)
-
+    global reviews
+    names, ids, ingredients_dict, images_dict, nutritions_dict, reviews = get_meals(ingredients_str, ingredients_arr)
+    #print(names)
     for meal in ingredients_dict:    
         if (not len(ingredients_dict[meal]) == 0): 
             ingredients_dict[meal] = ingredients_dict[meal][:-1]
-    print(names)
+
     return jsonify(status=200)
 
 @app.route("/getrecommendations", methods=["GET"])
 def get_recommendations():
     data = []
     for name in names:
-        id_, image, ingredients, nutrition = ids[name], images_dict[name], ingredients_dict[name], nutritions_dict[name]
+        id_, image, ingredients, nutrition, review = ids[name], images_dict[name], ingredients_dict[name], nutritions_dict[name], reviews[name]
         data.append({
             "name": name, 
             "id": id_,
             "image": image,
             "ingredients": ingredients,
             "nutrition": nutrition,
-            "stars": 4.3,
+            "stars": review,
         })
-    print("ajsdflajsfljasdf")
-    print(data)
+
     return jsonify(items=data)
 
 @app.route("/createmeal", methods=["GET", "POST"])
@@ -82,12 +87,13 @@ def process_meal():
     scale_factors, new_nutrition_facts, new_ingredients = run_optimization(chatgpt_input_dict= gpt_output, goals = goals, n_iter = 150)
     
     global meal_data
-    meal_data = getMetaData(new_ingredients,new_nutrition_facts, ids[chosen_name])
+    meal_data = getMetaData(new_ingredients,new_nutrition_facts, ids[chosen_name], reviews[chosen_name])
     
     return jsonify(status=200)
 
 @app.route("/getmeal", methods=["GET"])
 def get_mealdata():
+    print(meal_data)
     return jsonify(items=meal_data)
 
 if __name__ == '__main__':

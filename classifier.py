@@ -19,6 +19,7 @@ def run_model(image):
         buffered = BytesIO()
         im_base64 = Image.fromarray(im)
         im_base64.save(buffered, format="JPEG")
+        im_base64.show()
         out.append(base64.b64encode(buffered.getvalue()).decode('utf-8'))  # base64 encoded image with results
 
         res = results.pandas().xyxy[0].to_json(orient='records')
