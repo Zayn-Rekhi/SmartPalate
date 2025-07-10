@@ -6,7 +6,7 @@ import openai
 class ChatApp:
     def __init__(self):
         # Setting the API key to use the OpenAI API
-        openai.api_key = "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"
+        openai.api_key = os.getenv("APIKEY")
         self.messages = [
             {"role": "system", "content": "food shit."},
         ]
